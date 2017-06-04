@@ -15,12 +15,14 @@ public class Message {
 		this.recipientAddress = new Address(recipient, recipientPort);
 		
 		this.message = message.replaceAll("\\t", " "); // Replace all tabs with white space, we use tabs to encode the msg later
+		this.message = this.message.trim();
 	}
 	
 	public Message(Address senderAddress, Address recipientAddress, String message) {
 		this.senderAddress = senderAddress;
 		this.recipientAddress = recipientAddress;
 		this.message = message.replaceAll("\\t", " ");
+		this.message = this.message.trim();
 	}
 	
 	public Message(DatagramPacket packet) throws UnknownHostException {
@@ -38,7 +40,7 @@ public class Message {
 		recipientAddress.ip = InetAddress.getByName(recipientInfo[0]);
 		recipientAddress.port = Integer.parseInt(recipientInfo[1]);
 		
-		this.message = fields[2]; // Message doesn't have to be split
+		this.message = fields[2].trim(); // Message doesn't have to be split
 	}
 	
 	public String encode() {

@@ -28,6 +28,27 @@ public class Client {
 	public void start() {
 		System.out.println("Starting client on " + address);
 		//Scanner in = new Scanner(System.in);
+		
+		new Thread( () -> {	
+			
+			while (true) {
+				try {
+					byte [] buf = new byte[Router.PACKET_SIZE];
+					DatagramPacket packet = new DatagramPacket(buf, buf.length);
+					socket.receive(packet);
+					
+					Message message = new Message(packet);
+					displayMessage(message);
+					
+					Thread.sleep(1000);
+				} catch (IOException | InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		}).start();
+		
 		while (true) {
 			
 			Address recipientAddress = inquireRecipientAddress();
@@ -63,17 +84,23 @@ public class Client {
 			System.out.print("Insert the recipient's IP address: ");
 			String ip = in.nextLine();
 			
-			System.out.println("Insert the recipient's port:");
+			System.out.print("Insert the recipient's port: ");
 			String port = in.nextLine();
 
 			try {
 				Address recipientAddress = new Address(InetAddress.getByName(ip), Integer.parseInt(port));
-				
 				return recipientAddress;
 			} catch (NumberFormatException | UnknownHostException e) {
 				System.out.println("Invalid address. Please try again.");
-				e.printStackTrace();
+				//e.printStackTrace();
 			}		
 		} while(true);
+	}
+	
+	private void displayMessage(Message message) {
+		System.out.println("\n------------");
+		System.out.println("New message!");
+		System.out.println(message);
+		System.out.println("------------");
 	}
 }

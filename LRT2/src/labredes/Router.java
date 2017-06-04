@@ -23,15 +23,17 @@ public class Router {
 	
 	public void start() {
 		System.out.println("Starting router on " + address);
+		System.out.println("Waiting for messages...");
 		
 		while (true) {
-			System.out.println("Waiting for message...");
 			try {
 				// Create packet
 				DatagramPacket packet = new DatagramPacket(new byte[PACKET_SIZE], PACKET_SIZE);
 				// Receive and handle packet
 				socket.receive(packet);
-				new Thread( () -> {	handlePacket(packet); }).start();
+				new Thread( () -> {	
+					handlePacket(packet);
+				}).start();
 				
 			} catch (Exception e) {
 				System.out.println("Something went terribly wrong.");
@@ -43,11 +45,20 @@ public class Router {
 	private void handlePacket(DatagramPacket packet) {
 		try {
 			Message message = new Message(packet);
-			displayMessage(message);
+
+			if (this.address.compare(message.recipientAddress)) {
+				// Display message if its for the router
+				System.out.println("Received a message:");
+				System.out.println(message);
+			} else {
+				// If not, display message and forward it
+				Address forwardAddress = routingTable.getGatewayForAddress(message.recipientAddress);
+				System.out.println("Received the following packet: ");
+				System.out.println(message.encode());
+				System.out.println("Forwarding it to its destination.");
+				sendMessage(message, forwardAddress);
+			}
 			
-			Address forwardAddress = routingTable.getGatewayForAddress(message.recipientAddress);
-			
-			sendMessage(message, forwardAddress);
 		} catch (UnknownHostException e) {
 			System.out.println("Failed to decode packet.");
 			System.out.println(e.getMessage());
@@ -56,7 +67,7 @@ public class Router {
 	
 	private void sendMessage(Message message, Address destination) {
 		byte[] encodedMessage = message.encode().getBytes();
-		DatagramPacket packet = new DatagramPacket(encodedMessage, 0, PACKET_SIZE, destination.ip, destination.port);
+		DatagramPacket packet = new DatagramPacket(encodedMessage, encodedMessage.length, destination.ip, destination.port);
 		
 		try {
 			socket.send(packet);
