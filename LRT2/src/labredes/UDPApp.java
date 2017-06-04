@@ -1,12 +1,12 @@
 package labredes;
 
 import java.net.SocketException;
+import java.net.UnknownHostException;
 
 public class UDPApp {
 
 	public static void main(String args[]) {
-		
-		if (args.length > 0 && args[0].equalsIgnoreCase("r") || args[0].equalsIgnoreCase("router")) {
+		if (args.length > 0 && (args[0].equalsIgnoreCase("r") || args[0].equalsIgnoreCase("router"))) {
 			setUpRouter();
 		} else {
 			setUpClient();
@@ -28,7 +28,16 @@ public class UDPApp {
 	}
 	
 	private static void setUpClient() {
-		Client client = new Client();
+		try {
+			Client client = new Client();
+			client.start();
+		} catch (SocketException | UnknownHostException e) {
+			System.out.println("Error creating a client application.");
+			System.out.println("Most likely the randomly generated port number is already being used by another application.");
+			System.out.println(e.getMessage());
+			System.out.println("The program will now exit.");
+			System.exit(0); // Explicit exit
+		}
 	}
 	
 }
