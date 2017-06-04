@@ -23,6 +23,9 @@ public class Router {
 	
 	public void start() {
 		System.out.println("Starting router on " + address);
+		System.out.println();
+		routingTable.print();
+		System.out.println();
 		System.out.println("Waiting for messages...");
 		
 		while (true) {
@@ -48,8 +51,7 @@ public class Router {
 
 			if (this.address.compare(message.recipientAddress)) {
 				// Display message if its for the router
-				System.out.println("Received a message:");
-				System.out.println(message);
+				displayMessage(message);
 			} else {
 				// If not, display message and forward it
 				Address forwardAddress = routingTable.getGatewayForAddress(message.recipientAddress);
@@ -79,8 +81,10 @@ public class Router {
 	}
 	
 	private void displayMessage(Message message) {
-		System.out.println("Received the following packet:");
+		System.out.println("\n------------");
+		System.out.println("New message!");
 		System.out.println(message);
+		System.out.println("------------");
 	}
 	
 	public static Address getRouterAddress() {

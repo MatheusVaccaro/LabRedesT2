@@ -21,17 +21,6 @@ public class Address {
 	}
 	
 	public boolean compare(Address address) {
-		System.out.println(this.ip.getHostAddress() + "\t" + address.ip.getHostAddress());
-		System.out.println(this.port + " " + address.port);
-		
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
 		return this.ip.getHostAddress().equals(address.ip.getHostAddress()) && this.port == address.port;
 	}
 

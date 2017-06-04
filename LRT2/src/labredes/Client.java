@@ -26,11 +26,12 @@ public class Client {
 	}
 	
 	public void start() {
-		System.out.println("Starting client on " + address);
-		//Scanner in = new Scanner(System.in);
+		System.out.println("\nStarting client on " + address);
+		System.out.println();
+		routingTable.print();
+		System.out.println();
 		
 		new Thread( () -> {	
-			
 			while (true) {
 				try {
 					byte [] buf = new byte[Router.PACKET_SIZE];
@@ -45,8 +46,7 @@ public class Client {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			}
-			
+			}	
 		}).start();
 		
 		while (true) {
