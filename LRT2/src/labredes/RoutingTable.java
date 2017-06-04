@@ -18,7 +18,11 @@ public class RoutingTable {
 	public Address getGatewayForAddress(Address address) {
 		
 		if (isRouter) {
-			return address;
+			if (address.ip.equals(owner.ip)) {
+				return address;
+			} else {
+				return new Address(address.ip, Router.ROUTER_PORT);
+			}		
 		} 
 		
 		if (address.ip.equals(owner.ip)) {
@@ -30,7 +34,8 @@ public class RoutingTable {
 	
 	public void print() {
 		if (isRouter) {
-			System.out.println("0.0.0.0\t\t->\t\"Direct\"");			
+			System.out.println(owner.ip.getHostAddress() + "\t->\tDirect");
+			System.out.println("0.0.0.0\t\t->\t0.0.0.0:6000");			
 		} else {
 			System.out.println(owner.ip.getHostAddress() + "\t->\tDirect");
 			System.out.println("0.0.0.0\t\t->\t" + Router.getRouterAddress());
