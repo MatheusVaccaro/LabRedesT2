@@ -35,7 +35,7 @@ public class RoutingTable {
 	public void print() {
 		if (isRouter) {
 			System.out.println(owner.ip.getHostAddress() + "\t->\tDirect");
-			System.out.println("0.0.0.0\t\t->\t0.0.0.0:6000");			
+			System.out.println("0.0.0.0\t\t->\t0.0.0.0:" + Router.ROUTER_PORT);			
 		} else {
 			System.out.println(owner.ip.getHostAddress() + "\t->\tDirect");
 			System.out.println("0.0.0.0\t\t->\t" + Router.getRouterAddress());
